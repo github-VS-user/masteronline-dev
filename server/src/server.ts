@@ -181,7 +181,7 @@ h1 span{color:#58a6ff;font-size:.9rem;font-weight:400}
 <h2>📊 Server Capacity</h2>
 <div class="bar"><div class="bar-fill" id="cap-bar" style="width:0%"></div></div>
 <div class="stats">
-<span>Max recommended: <strong>~50</strong> players</span>
+<span>Max recommended: <strong>~20</strong> players</span>
 <span>Current: <strong id="cap-players">-</strong> (<span class="pct" id="cap-pct">-</span>%)</span>
 <span id="cap-slots"></span>
 </div>
@@ -196,7 +196,7 @@ h1 span{color:#58a6ff;font-size:.9rem;font-weight:400}
 <script>
 let pollTimer=null
 const POLL_MS=5000
-const MAX=50
+const MAX=20
 function fmtUptime(s){const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);return d>0?d+'d '+h+'h '+m+'m':h>0?h+'h '+m+'m':m+'m '+s%60+'s'}
 function fmtMB(b){return (b/1048576).toFixed(0)}
 function fmtTime(t){return new Date(t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}

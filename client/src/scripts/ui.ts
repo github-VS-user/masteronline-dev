@@ -400,52 +400,92 @@ export async function setUpUI(): Promise<void> {
 
         if (!response?.success) {
             console.warn("[JoinGame] /api/getGame did not return a successful response. Server may be full or unavailable.");
-            Game.connecting = false;
-            ui.splashMsgText.html(getTranslatedString("msg_err_finding"));
+            // Queue mode: auto-retry every 3s until a slot opens
+            const queueMsg = document.createElement("div");
+            queueMsg.style.textAlign = "center";
+            queueMsg.innerHTML = '<div style="font-size:18px;font-weight:700;color:#ff7500;margin-bottom:8px">Server is full!</div>'
+                + '<div id="queue-status" style="font-size:14px;color:#ccc;margin-bottom:12px">Waiting for a slot...</div>'
+                + '<button id="btn-cancel-queue" class="btn btn-darken btn-secondary" style="padding:6px 20px;font-size:13px">Cancel</button>';
+            ui.splashMsgText.html("");
+            ui.splashMsgText[0].appendChild(queueMsg);
             ui.splashMsg.show();
-            resetPlayButtons();
+            ui.loaderContainer.hide();
+            ui.splashOptions.removeClass("loading");
+
+            let cancelled = false;
+            let retries = 0;
+            const cancelBtn = document.getElementById("btn-cancel-queue");
+            const statusEl = document.getElementById("queue-status");
+            cancelBtn?.addEventListener("click", () => {
+                cancelled = true;
+                ui.splashMsg.hide();
+                resetPlayButtons();
+            });
+
+            const poll = async (): Promise<void> => {
+                if (cancelled) return;
+                retries++;
+                if (statusEl) statusEl.textContent = `Waiting for a slot... (attempt ${retries})`;
+                try {
+                    const res = await fetch(getGameUrl);
+                    if (res.ok) {
+                        const pollResponse = await res.json() as GetGameResponse;
+                        if (pollResponse?.success) {
+                            console.log("[JoinGame] Queue resolved — slot opened!");
+                            response = pollResponse;
+                            ui.splashMsg.hide();
+                            proceedToConnect(response as { success: true, gameID: number, mode: ModeName });
+                            return;
+                        }
+                    }
+                } catch { /* retry */ }
+                if (!cancelled) setTimeout(poll, 3000);
+            };
+            setTimeout(poll, 3000);
             return;
         }
 
-        if (response?.mode !== Game.modeName) {
-            alert(`Mode mismatch: expected ${Game.modeName}, but server is on ${response.mode}`);
-            location.reload();
-            return;
-        }
+        proceedToConnect(response);
+        return;
 
-        const params = new URLSearchParams();
-
-        // teamID and autoFill removed — always solo
-
-        const devPass = GameConsole.getBuiltInCVar("dv_password");
-        if (devPass) params.set("password", devPass);
-
-        const role = GameConsole.getBuiltInCVar("dv_role");
-        if (role) params.set("role", role);
-
-        const lobbyClearing = GameConsole.getBuiltInCVar("dv_lobby_clearing");
-        if (lobbyClearing) params.set("lobbyClearing", "true");
-
-        const weaponPreset = GameConsole.getBuiltInCVar("dv_weapon_preset");
-        if (weaponPreset) params.set("weaponPreset", weaponPreset);
-
-        const nameColor = GameConsole.getBuiltInCVar("dv_name_color");
-        if (nameColor) {
-            try {
-                params.set("nameColor", new Color(nameColor).toNumber().toString());
-            } catch (e) {
-                GameConsole.setBuiltInCVar("dv_name_color", "");
-                console.error(e);
+        function proceedToConnect(response: GetGameResponse & { success: true }): void {
+            if (response?.mode !== Game.modeName) {
+                alert(`Mode mismatch: expected ${Game.modeName}, but server is on ${response.mode}`);
+                location.reload();
+                return;
             }
+
+            const params = new URLSearchParams();
+
+            const devPass = GameConsole.getBuiltInCVar("dv_password");
+            if (devPass) params.set("password", devPass);
+
+            const role = GameConsole.getBuiltInCVar("dv_role");
+            if (role) params.set("role", role);
+
+            const lobbyClearing = GameConsole.getBuiltInCVar("dv_lobby_clearing");
+            if (lobbyClearing) params.set("lobbyClearing", "true");
+
+            const weaponPreset = GameConsole.getBuiltInCVar("dv_weapon_preset");
+            if (weaponPreset) params.set("weaponPreset", weaponPreset);
+
+            const nameColor = GameConsole.getBuiltInCVar("dv_name_color");
+            if (nameColor) {
+                try {
+                    params.set("nameColor", new Color(nameColor).toNumber().toString());
+                } catch (e) {
+                    GameConsole.setBuiltInCVar("dv_name_color", "");
+                    console.error(e);
+                }
+            }
+
+            const wsUrl = `${selectedRegion.gameAddress.replace("<gameID>", (response.gameID + selectedRegion.offset).toString())}?${params.toString()}`;
+            console.log(`[JoinGame] Connecting to WebSocket: ${wsUrl}`);
+            Game.connect(wsUrl);
+            ui.splashMsg.hide();
+
+            if (createTeamMenu.css("display") !== "none") createTeamMenu.hide();
         }
-
-        const wsUrl = `${selectedRegion.gameAddress.replace("<gameID>", (response.gameID + selectedRegion.offset).toString())}?${params.toString()}`;
-        console.log(`[JoinGame] Connecting to WebSocket: ${wsUrl}`);
-        Game.connect(wsUrl);
-        ui.splashMsg.hide();
-
-        // Check again because there is a small chance that the create-team-menu element won't hide.
-        if (createTeamMenu.css("display") !== "none") createTeamMenu.hide(); // what the if condition doin
     };
 
     let lastPlayButtonClickTime = 0;
