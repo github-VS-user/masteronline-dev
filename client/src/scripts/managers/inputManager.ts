@@ -486,6 +486,21 @@ class InputManagerClass {
                 if (aimTrail) aimTrail.visible = false;
                 if (altAimTrail) altAimTrail.visible = false;
             });
+
+            // Reset joystick state when touch is cancelled or tab loses focus
+            // Fixes "stuck joystick" bug: missed touchend/pointerup after ~5 mins
+            const resetJoystick = (): void => {
+                this.movement.moving = false;
+                aimJoystickUsed = false;
+                this.attacking = false;
+                this.resetAttacking = true;
+                shootOnRelease = false;
+            };
+
+            document.addEventListener("pointercancel", resetJoystick);
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden) resetJoystick();
+            });
         }
 
         // Gyro stuff

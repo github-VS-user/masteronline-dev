@@ -253,13 +253,13 @@
 #team-container {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 3px;
     width: max-content;
 
     position: absolute;
-    transform: scale(60%);
+    transform: scale(80%);
     transform-origin: 0% 0%;
-    left: 240px;
+    left: 235px;
     top: 10px;
 
 
@@ -267,7 +267,7 @@
         flex-direction: column;
         left: 5px;
         top: 145px;
-        transform: scale(55%);
+        transform: scale(70%);
         transform-origin: 0% 0%;
     }
 
@@ -275,7 +275,7 @@
         flex-direction: row;
         left: 5px;
         top: 145px;
-        transform: scale(55%);
+        transform: scale(70%);
         transform-origin: 0% 0%;
     }
 
@@ -288,6 +288,7 @@
         border-radius: 8px;
         position: relative;
         width: max-content;
+        max-width: 250px;
 
         @media screen and (max-height: 465px) and (max-width: variables.$screen-large) {
             padding: 7px;
@@ -316,15 +317,15 @@
         }
 
         .teammate-indicator-container {
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             position: absolute;
-            left: 13px;
+            left: 15px;
 
             .teammate-indicator {
-                width: 36px;
-                height: 36px;
+                width: 44px;
+                height: 44px;
                 mix-blend-mode: multiply;
             }
         }
@@ -336,14 +337,18 @@
 
         .teammate-name {
             margin-left: 8px;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            max-width: 110px;
         }
 
         .teammate-badge {
             margin-left: 5px;
-            width: 30px;
+            width: 26px;
         }
 
         @media screen and (max-height: 465px) and (max-width: variables.$screen-large) {

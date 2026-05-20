@@ -31,12 +31,20 @@
     "@types/node": "^22.19.3",
     "typescript": "^5.9.3"
   },
-  "workspaces": ["client", "common", "server", "tests"],
+  "workspaces": [
+    "client",
+    "common",
+    "server",
+    "tests"
+  ],
   "trustedDependencies": [
     "@parcel/watcher",
     "@swc/core",
     "esbuild",
     "skia-canvas",
     "unrs-resolver"
-  ]
+  ],
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.2.0"
+  }
 }

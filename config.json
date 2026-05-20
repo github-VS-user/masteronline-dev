@@ -1,0 +1,18 @@
+{
+  "$schema": "./server/src/utils/config.schema.json",
+  "hostname": "0.0.0.0",
+  "port": 8000,
+  "map": "main",
+  "teamMode": {
+    "rotation": ["solo", "duo", "squad"],
+    "cron": "*/15 * * * *"
+  },
+  "maxPlayersPerGame": 50,
+  "maxGames": 3,
+  "ipHeader": "X-Real-IP",
+  "maxSimultaneousConnections": 5,
+  "maxJoinAttempts": {
+    "count": 10,
+    "duration": 15000
+  }
+}

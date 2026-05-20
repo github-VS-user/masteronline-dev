@@ -13,7 +13,6 @@ import { SpectatePacket } from "@common/packets/spectatePacket";
 import { CustomTeamMessages, type CustomTeamMessage, type CustomTeamPlayerInfo, type PunishmentMessage } from "@common/typings";
 import { ExtendedMap } from "@common/utils/misc";
 import { DefinitionType, type ReferenceTo, type ReifiableDef } from "@common/utils/objectDefinitions";
-import { pickRandomInArray } from "@common/utils/random";
 import { sound } from "@pixi/sound";
 import $ from "jquery";
 import { Color, ColorMatrixFilter, isWebGLSupported, isWebGPUSupported } from "pixi.js";
@@ -30,7 +29,6 @@ import { body, createDropdown } from "./uiHelpers";
 import { EMOTE_SLOTS, UI_DEBUG_MODE } from "./utils/constants";
 import { Crosshairs, getCrosshair } from "./utils/crosshairs";
 import { html, requestFullscreen } from "./utils/misc";
-import { spritesheetLoadPromise } from "./utils/pixi";
 import { TRANSLATIONS, getTranslatedString } from "./utils/translations/translations";
 import type { TranslationKeys } from "./utils/translations/typings";
 import { CameraManager } from "./managers/cameraManager";
@@ -59,13 +57,6 @@ let selectedRegion: RegionInfo | undefined;
 
 const regionInfo: Record<string, RegionInfo> = Config.regions;
 
-export let teamSocket: WebSocket | undefined;
-let teamID: string | undefined | null;
-let joinedTeam = false;
-let autoFill = false;
-let globalIsLeader = false;
-let globalReady = false;
-
 export let autoPickup = true;
 
 let buttonsLocked = true;
@@ -73,54 +64,30 @@ export function lockPlayButtons(): void { buttonsLocked = true; }
 export function unlockPlayButtons(): void { buttonsLocked = false; }
 
 let lastDisconnectTime: number | undefined;
+// Team/duo removed — kept as null/undefined to prevent crashes in dead code
+let teamID: string | undefined | null = undefined;
+let autoFill = false;
+let joinedTeam = false;
+let globalIsLeader = false;
+let globalReady = false;
+let teamSocket: WebSocket | undefined = undefined;
 export function updateDisconnectTime(): void { lastDisconnectTime = Date.now(); }
 
-let btnMap: ReadonlyArray<readonly [TeamMode, JQuery<HTMLDivElement>]>;
 export function resetPlayButtons(): void { // TODO Refactor this method to use uiManager for jQuery calls
-    if (buttonsLocked) return;
+    console.log("[resetPlayButtons] called, buttonsLocked:", buttonsLocked);
+    if (buttonsLocked) { console.log("[resetPlayButtons] BLOCKED — buttons locked"); return; }
 
     const ui = UIManager.ui;
-    const { teamMode, nextTeamMode, nextMode } = selectedRegion ?? regionInfo[Config.defaultRegion];
 
+    console.log("[resetPlayButtons] Removing loading class, hiding loader");
+    Game.connecting = false;
     ui.splashOptions.removeClass("loading");
+    ui.loaderContainer.hide();
     ui.loaderText.text("");
-
-    const isSolo = teamMode === TeamMode.Solo;
-
-    for (
-        const [size, btn] of (
-            btnMap ??= [
-                [TeamMode.Solo, ui.playSoloBtn],
-                [TeamMode.Duo, ui.playDuoBtn],
-                [TeamMode.Squad, ui.playSquadBtn]
-            ]
-        )
-    ) btn.toggleClass("locked", teamMode !== undefined && teamMode !== size);
-
-    ui.teamOptionBtns.toggleClass("locked", isSolo);
-
-    ui.switchMessages.css("top", isSolo ? "225px" : "150px").toggle(nextTeamMode !== undefined || nextMode !== undefined);
-
-    ui.nextTeamModeMsg.toggle(nextTeamMode !== undefined);
-    const teamModeIcons = [
-        "url(./img/misc/player_icon.svg)",
-        "url(./img/misc/duos.svg)",
-        undefined,
-        "url(./img/misc/squads.svg)"
-    ];
-    // biome-ignore lint/style/noNonNullAssertion: nextTeamMode - 1 must be 0, 1, 2, or 3
-    ui.nextTeamModeIcon.css("background-image", nextTeamMode ? teamModeIcons[nextTeamMode - 1]! : "none");
-
-    ui.nextModeMsg.toggle(nextMode !== undefined);
-    // biome-ignore lint/style/noNonNullAssertion: nextMode must be set here
-    ui.nextModeIcon.css("background-image", `url(${Modes[nextMode!]?.playButtonImage ?? "./img/game/shared/emotes/suroi_logo.svg"})`);
+    console.log("[resetPlayButtons] Complete — play buttons ready");
 }
 
 let forceReload = false;
-export function reloadPage(): void {
-    forceReload = true;
-    location.reload();
-}
 
 export async function fetchServerData(): Promise<void> {
     const ui = UIManager.ui;
@@ -207,38 +174,6 @@ export async function fetchServerData(): Promise<void> {
     });
     await Promise.all(regionPromises);
 
-    const pad = (n: number): string | number => n < 10 ? `0${n}` : n;
-    const setTimeString = (elem: JQuery, millis: number): void => {
-        if (millis === Infinity) return;
-
-        const days = Math.floor(millis / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(millis / (1000 * 60 * 60)) % 24;
-        const minutes = Math.floor(millis / (1000 * 60)) % 60;
-        const seconds = Math.floor(millis / 1000) % 60;
-        elem.text(`${days > 0 ? `${pad(days)}:` : ""}${pad(hours)}:${pad(minutes)}:${pad(seconds)}`);
-    };
-    const updateSwitchTime = (): void => {
-        if (!selectedRegion) return;
-        const { teamModeSwitchTime, modeSwitchTime, retrievedTime } = selectedRegion;
-
-        // biome-ignore lint/style/noNonNullAssertion: retrievedTime must exist at this point in the code
-        const offset = Date.now() - retrievedTime!;
-        const timeBeforeTeamModeSwitch = (teamModeSwitchTime ?? Infinity) - offset;
-        const timeBeforeModeSwitch = (modeSwitchTime ?? Infinity) - offset;
-
-        if (
-            (timeBeforeTeamModeSwitch < 0 && !Game.gameStarted)
-            || timeBeforeModeSwitch < 0
-        ) {
-            reloadPage();
-            return;
-        }
-
-        setTimeString(ui.teamModeSwitchTime, timeBeforeTeamModeSwitch);
-        setTimeString(ui.modeSwitchTime, timeBeforeModeSwitch);
-    };
-    setInterval(updateSwitchTime, 1000);
-
     const serverName = $<HTMLSpanElement>("#server-name");
     const playerCount = $<HTMLSpanElement>("#server-player-count");
     const updateServerSelectors = (): void => {
@@ -253,11 +188,11 @@ export async function fetchServerData(): Promise<void> {
         serverName.text(`${selectedRegion.flag ?? ""}${getTranslatedString(`region_${region}` as TranslationKeys)}`);
         playerCount.text(selectedRegion.playerCount ?? "-");
         // $("#server-ping").text(selectedRegion.ping && selectedRegion.ping > 0 ? selectedRegion.ping : "-");
-        updateSwitchTime();
         resetPlayButtons();
     };
 
     selectedRegion = regionInfo[GameConsole.getBuiltInCVar("cv_region") ?? Config.defaultRegion];
+    console.log("[fetchServerData] Calling updateServerSelectors for region:", selectedRegion?.name);
     updateServerSelectors();
 
     serverList.children("li.server-list-item").on("click", function(this: HTMLLIElement) {
@@ -277,14 +212,6 @@ export async function fetchServerData(): Promise<void> {
         updateServerSelectors();
     });
 
-    const joinTeam = (): void => {
-        if (window.location.hash) {
-            teamID = window.location.hash.slice(1);
-            $("#btn-join-team").trigger("click");
-        }
-    };
-    joinTeam();
-    window.addEventListener("hashchange", joinTeam);
 }
 
 // Take the stuff that needs fetchServerData out of setUpUI and put it here
@@ -440,33 +367,39 @@ export async function setUpUI(): Promise<void> {
     // Hide option to hide qq if the language is not Chinese
     $(".checkbox-setting").has("#toggle-hide-qq").toggle(isChinese);
 
-    ui.lockedInfo.on("click", () => ui.lockedTooltip.fadeToggle(250));
-
     const joinGame = async(): Promise<void> => {
-        if (
-            Game.gameStarted
-            || Game.connecting
-            || selectedRegion === undefined // shouldn't happen
-        ) return;
+        console.log("[joinGame] Called. gameStarted:", Game.gameStarted, "connecting:", Game.connecting, "selectedRegion:", selectedRegion?.name);
+        if (Game.gameStarted) { console.log("[joinGame] BLOCKED — game already started"); return; }
+        if (Game.connecting) { console.log("[joinGame] BLOCKED — already connecting"); return; }
+        if (selectedRegion === undefined) { console.log("[joinGame] BLOCKED — no region selected"); return; }
 
+        console.log("[joinGame] Starting — setting connecting=true, adding loading class");
         Game.connecting = true;
         ui.splashOptions.addClass("loading");
+        ui.loaderContainer.show();
         ui.loaderText.text(getTranslatedString("loading_finding_game"));
         // ui.cancelFindingGame.css("display", "");
 
         type GetGameResponse = { success: true, gameID: number, mode: ModeName } | { success: false };
         let response: GetGameResponse | undefined;
+        const getGameUrl = `${selectedRegion.mainAddress}/api/getGame`;
+        console.log(`[JoinGame] Fetching /api/getGame from: ${getGameUrl}`);
         try {
-            const [res] = await Promise.all([
-                fetch(`${selectedRegion.mainAddress}/api/getGame${teamID ? `?teamID=${teamID}` : ""}`),
-                spritesheetLoadPromise()
-            ]);
-            if (res.ok) response = await res.json() as GetGameResponse;
+            console.log("[JoinGame] About to fetch...");
+            const res = await fetch(getGameUrl);
+            console.log("[JoinGame] Fetch completed, status:", res.status);
+            if (res.ok) {
+                response = await res.json() as GetGameResponse;
+                console.log(`[JoinGame] /api/getGame response success=${response?.success} gameID=${(response as any)?.gameID} mode=${(response as any)?.mode}`);
+            } else {
+                console.warn(`[JoinGame] /api/getGame returned status ${res.status}: ${res.statusText}`);
+            }
         } catch (e) {
-            console.error("Error finding game. Details:", e);
+            console.error("[JoinGame] Error fetching /api/getGame. Details:", e);
         }
 
         if (!response?.success) {
+            console.warn("[JoinGame] /api/getGame did not return a successful response. Server may be full or unavailable.");
             Game.connecting = false;
             ui.splashMsgText.html(getTranslatedString("msg_err_finding"));
             ui.splashMsg.show();
@@ -482,8 +415,7 @@ export async function setUpUI(): Promise<void> {
 
         const params = new URLSearchParams();
 
-        if (teamID) params.set("teamID", teamID);
-        if (autoFill) params.set("autoFill", String(autoFill));
+        // teamID and autoFill removed — always solo
 
         const devPass = GameConsole.getBuiltInCVar("dv_password");
         if (devPass) params.set("password", devPass);
@@ -507,7 +439,9 @@ export async function setUpUI(): Promise<void> {
             }
         }
 
-        Game.connect(`${selectedRegion.gameAddress.replace("<gameID>", (response.gameID + selectedRegion.offset).toString())}/play?${params.toString()}`);
+        const wsUrl = `${selectedRegion.gameAddress.replace("<gameID>", (response.gameID + selectedRegion.offset).toString())}?${params.toString()}`;
+        console.log(`[JoinGame] Connecting to WebSocket: ${wsUrl}`);
+        Game.connect(wsUrl);
         ui.splashMsg.hide();
 
         // Check again because there is a small chance that the create-team-menu element won't hide.
@@ -517,12 +451,16 @@ export async function setUpUI(): Promise<void> {
     let lastPlayButtonClickTime = 0;
 
     // Join server when play buttons are clicked
-    $("#btn-play-solo, #btn-play-duo, #btn-play-squad").on("click", () => {
+    console.log("[setUpUI] Registering play button click handler");
+    $("#btn-play-solo").on("click", () => {
+        console.log("[click] Play Solo button clicked");
         const now = Date.now();
-        if (now - lastPlayButtonClickTime < 1500) return; // Play button rate limit
+        if (now - lastPlayButtonClickTime < 1500) { console.log("[click] Rate limited, ignoring"); return; }
         lastPlayButtonClickTime = now;
+        console.log("[click] Calling joinGame...");
         void joinGame();
     });
+    console.log("[setUpUI] Click handler registered");
 
     const createTeamMenu = $("#create-team-menu");
     $<HTMLButtonElement>("#btn-create-team, #btn-join-team").on("click", function() {
@@ -834,82 +772,6 @@ export async function setUpUI(): Promise<void> {
     }
 
     const usernameField = $<HTMLInputElement>("#username-input");
-
-    const youtubers = [
-        {
-            name: "Sapphire",
-            link: "https://www.youtube.com/channel/UCvsD5KTuL6aXFmiPFHLNq0g"
-        },
-        {
-            name: "End",
-            link: "https://www.youtube.com/channel/UCUEZCfGgTurhTqerJjIaFTQ"
-        },
-        {
-            name: "TEAMFIGHTER 27",
-            link: "https://www.youtube.com/channel/UCJF75th14wo3O4YvH8GfFXw"
-        },
-        {
-            name: "Red King Gaming",
-            link: "https://www.youtube.com/channel/UCr7jJLYLU9mCBVfL5rmpvXg"
-        },
-        {
-            name: "Viiper",
-            link: "https://www.youtube.com/channel/UCey8-fJfkF7UFYdWBcegzWA"
-        },
-        {
-            name: "123OP",
-            link: "https://www.youtube.com/@123op."
-        },
-        {
-            name: "PacifistX",
-            link: "https://www.youtube.com/@PacifstX"
-        },
-        {
-            name: "Pablo_Fan_",
-            link: "https://www.youtube.com/@Pablo_Fan_"
-        },
-        {
-            name: "this.is.gls_",
-            link: "https://www.youtube.com/@this.is.gls_"
-        },
-        {
-            name: "dReammakers.",
-            link: "https://www.youtube.com/channel/UCLid-yvmRUmpA5NBP34SOug"
-        },
-        {
-            name: "at6030",
-            link: "https://www.youtube.com/@aat6030"
-        }
-    ];
-    const youtuber = pickRandomInArray(youtubers);
-    $("#youtube-featured-name").text(youtuber.name);
-    $("#youtube-featured-content").attr("href", youtuber.link).removeAttr("target");
-
-    const streamers = [
-        {
-            name: "MikeMotions",
-            link: "https://www.twitch.tv/mikemotions"
-        },
-        {
-            name: "conduketive",
-            link: "https://www.twitch.tv/conduketive"
-        },
-        {
-            name: "youraopp",
-            link: "https://www.twitch.tv/youraopp"
-        },
-        {
-            name: "bcdf92",
-            link: "https://www.twitch.tv/bcdf92"
-        },
-        {
-            name: "bedbests",
-            link: "https://www.twitch.tv/bedbests"
-        }
-    ];
-    const streamer = pickRandomInArray(streamers);
-    $("#twitch-featured-name").text(streamer.name);
-    $("#twitch-featured-content").attr("href", streamer.link).removeAttr("target");
 
     const toggleRotateMessage = (): JQuery =>
         $("#splash-rotate-message").toggle(

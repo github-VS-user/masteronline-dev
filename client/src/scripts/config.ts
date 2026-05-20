@@ -3,11 +3,19 @@ import type { ModeName } from "@common/definitions/modes";
 
 export const Config = {
     regions: {
+        eu: {
+            name: "Europe",
+            flag: "🇨🇭 ",
+            mainAddress: "https://online.master3d.net",
+            gameAddress: "wss://online.master3d.net/play/<gameID>",
+            offset: 1
+        },
         dev: {
             name: "Local Server",
-            mainAddress: "http://127.0.0.1:8000",
-            gameAddress: "ws://127.0.0.1:<gameID>",
-            offset: 8001
+            flag: "🔧 ",
+            mainAddress: "https://online.master3d.net",
+            gameAddress: "wss://online.master3d.net/play/<gameID>",
+            offset: 1
         }/* ,
         na: {
             name: "North America",
@@ -45,7 +53,7 @@ export const Config = {
             offset: 1
         } */
     },
-    defaultRegion: "dev"
+    defaultRegion: "eu"
 } satisfies ConfigType as ConfigType;
 
 export interface ConfigType {

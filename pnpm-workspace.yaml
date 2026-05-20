@@ -1,0 +1,11 @@
+packages:
+  - "client"
+  - "common"
+  - "server"
+  - "tests"
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  esbuild: true
+  skia-canvas: true
+  unrs-resolver: true

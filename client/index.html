@@ -10,30 +10,28 @@
 
     <meta name="apple-itunes-app" content="app-id=4N5YQ8X3F5, app-argument=https://suroi.io">
 
-    <meta name="title" content="Suroi - 2D battle royale game" />
+    <meta name="title" content="Master 3D Online - 2D battle royale" />
     <meta
       name="description"
-      content="Miss surviv.io and Surviv Reloaded? Suroi is an open-source 2D battle royale game inspired by surviv.io. Work in progress."
+      content="Play Master 3D Online — a 2D battle royale game. Fight, survive, and be the last one standing."
     />
     <meta
       name="keywords"
-      content="battle royale, io game, browser game, open source"
+      content="battle royale, io game, browser game, master3d, online game"
     />
 
-    <meta property="og:title" content="Suroi - 2D battle royale game" />
+    <meta property="og:title" content="Master 3D Online - 2D battle royale" />
     <meta
       property="og:description"
-      content="Miss surviv.io and Surviv Reloaded? Suroi is an open-source 2D battle royale game inspired by surviv.io. Work in progress."
+      content="Play Master 3D Online — a 2D battle royale game. Fight, survive, and be the last one standing."
     />
-    <meta property="og:site_name" content="suroi.io" />
+    <meta property="og:site_name" content="master3d.net" />
     <meta
       property="og:image"
       content="https://suroi.io/img/backgrounds/embed_background.png"
     />
-    
-    <meta name="apple-itunes-app" content="app-id=6751844616">
 
-    <title>Suroi - 2D battle royale game</title>
+    <title>Master 3D Online</title>
 
     <link rel="icon" type="image/x-icon" href="./favicon.ico" />
     <link
@@ -73,62 +71,261 @@
         opacity: 0;
       }
 
-      .loader {
-        background-image: url('data:image/svg+xml,<svg width="96" height="96" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><circle style="fill:%23000000;fill-opacity:1;stroke:%23008af0;stroke-width:5.74001;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" cx="48" cy="48" r="45.13"/><circle style="fill:none;fill-opacity:1;stroke:%23ff7500;stroke-width:4.59201;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" cx="48" cy="48" r="43.707"/><path style="fill:%23ff7500;fill-opacity:1;stroke-width:4.41161" d="M45.105 10.499a21.548 21.621 0 0 0-18.674 21.37 21.548 21.621 0 0 0 .318 3.564 21.548 21.621 0 0 0-3.226 1.494 21.548 21.621 0 0 0-9.11 26.92l.672-.389a15.084 15.135 0 0 1 6.692-18.03 15.084 15.135 0 0 1 8.258-2.011 15.084 15.135 0 0 1 11.94 6.956l1.97-1.147a4.31 4.324 0 0 1-.276-1.502 4.31 4.324 0 0 1 3.587-4.255v-2.296a15.084 15.135 0 0 1-14.365-15.07 15.084 15.135 0 0 1 12.214-14.845Zm5.746 0v.76a15.084 15.135 0 0 1 12.215 14.844 15.084 15.135 0 0 1-14.365 15.113v2.253a4.31 4.324 0 0 1 3.587 4.255 4.31 4.324 0 0 1-.275 1.502l1.97 1.147a15.084 15.135 0 0 1 11.939-6.956 15.084 15.135 0 0 1 8.258 2.011 15.084 15.135 0 0 1 6.718 18.047l.688.397a21.548 21.621 0 0 0-9.152-26.945 21.548 21.621 0 0 0-3.226-1.494 21.548 21.621 0 0 0 .318-3.564 21.548 21.621 0 0 0-18.675-21.37Zm-6.184 39.978-1.944 1.13a15.084 15.135 0 0 1-5.867 20.033 15.084 15.135 0 0 1-18.898-3.193l-.671.388a21.548 21.621 0 0 0 27.784 5.541 21.548 21.621 0 0 0 2.925-2.045 21.548 21.621 0 0 0 2.89 2.045 21.548 21.621 0 0 0 27.784-5.54l-.67-.39a15.084 15.135 0 0 1-18.9 3.194 15.084 15.135 0 0 1-5.84-20.015l-1.97-1.14a4.31 4.324 0 0 1-3.312 1.563 4.31 4.324 0 0 1-3.311-1.57z"/><path style="fill:%23008aff;fill-opacity:1;stroke-width:4.41161" d="M47.978 28.27c-4.539 0-8.715 1.59-12.025 4.229a13.647 13.693 0 0 0 3.114 3.918 14.28 14.28 0 0 1 8.911-3.107c3.391 0 6.495 1.17 8.946 3.125a13.647 13.693 0 0 0 3.106-3.919c-3.315-2.65-7.502-4.246-12.052-4.246ZM29.966 44.858a13.647 13.693 0 0 0-1.153.052c-.134.922-.232 1.856-.232 2.814 0 8.199 5.113 15.225 12.292 18.082a13.647 13.693 0 0 0 1.841-4.67 14.365 14.365 0 0 1-9.101-13.412c0-.701.068-1.381.163-2.055a13.647 13.693 0 0 0-3.81-.81zm36.025 0a13.647 13.693 0 0 0-3.81.812c.094.673.163 1.353.163 2.054 0 6.107-3.74 11.295-9.058 13.404a13.647 13.693 0 0 0 1.832 4.67c7.162-2.866 12.258-9.887 12.258-18.074 0-.958-.098-1.892-.233-2.814a13.647 13.693 0 0 0-1.152-.052z"/></svg>');
-        width: 96px;
-        height: 96px;
-        animation: rotate 3s infinite linear;
-      }
-
-      #loader-container, #initial-loader {
+      /* === Loader === */
         position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
+        top: 0; left: 0; bottom: 0; right: 0;
         margin: auto;
         z-index: 1000;
         pointer-events: none;
-      }
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
       #loader-container {
         display: flex;
-        gap: 10px;
+        position: absolute;
+        inset: 0;
+        z-index: 1000;
+        pointer-events: none;
+        gap: 16px;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+      }
+
+      .loader {
+        width: 60px;
+        aspect-ratio: 1;
+        position: relative;
+        animation: l5-0 1s infinite steps(1);
+      }
+      .loader::before,
+      .loader::after {
+        content: "";
+        position: absolute;
+        inset: 0 50% 50% 0;
+        transform-origin: bottom right;
+        background: #ff7500;
+        animation:
+          l5-1 0.5s infinite linear alternate,
+          l5-2 0.5s infinite steps(1) alternate;
+      }
+      .loader::after {
+        --s: -1, -1;
+      }
+
+      @keyframes l5-0 {
+        0% { transform: scale(1, 1) rotate(0deg); }
+        50% { transform: scale(1, -1) rotate(90deg); }
+      }
+      @keyframes l5-1 {
+        0% { transform: scale(var(--s, 1)) perspective(150px) rotateX(0deg); }
+        100% { transform: scale(var(--s, 1)) perspective(150px) rotateX(180deg); }
+      }
+      @keyframes l5-2 {
+        0% { background: #ff7500; }
+        50% { background: rgba(255, 117, 0, 0.25); }
+      }
+
+      #loader-text {
+        text-align: center;
+        font-size: 18px;
+        font-weight: 600;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+        color: #ccc;
+      }
+
+      #loader-support-btn {
+        pointer-events: auto;
+        margin-top: 8px;
+        padding: 10px 28px;
+        font-size: 16px;
+        font-weight: 600;
+        color: white;
+        background: linear-gradient(135deg, #ff7500, #e06600);
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 15px rgba(255, 117, 0, 0.4);
+      }
+      #loader-support-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(255, 117, 0, 0.6);
+      }
+      #loader-support-btn:active {
+        transform: scale(0.97);
+      }
+
+      /* Tip of the Day popup */
+      #tip-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(0,0,0,0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
+      #tip-modal {
+        background: #1a1a2e;
+        border: 1px solid rgba(255,117,0,0.3);
+        border-radius: 16px;
+        padding: 28px 32px;
+        max-width: 480px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      }
+      #tip-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        font-size: 20px;
+        font-weight: 700;
+        color: #ff7500;
+      }
+      #tip-close {
+        background: none;
+        border: none;
+        color: #888;
+        font-size: 28px;
+        cursor: pointer;
+        padding: 0 4px;
+        line-height: 1;
+      }
+      #tip-close:hover { color: #fff; }
+      #tip-content {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #e0e0e0;
+        margin-bottom: 20px;
+      }
+      #tip-got-it {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #ff7500, #e06600);
+        border: none;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.15s, box-shadow 0.15s;
+      }
+      #tip-got-it:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 15px rgba(255,117,0,0.4);
       }
 
       #splash-options.loading #splash-options-wrapper {
         filter: blur(3px);
       }
 
-      #loader-text {
-        text-align: center;
-        font-size: 20px;
-        font-weight: bold;
-        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
-      }
-
       #privacy-policy-link {
         color: white;
       }
 
-      @keyframes rotate {
-        from {
-          transform: rotate(0deg);
+      /* Custom text logo — Master 3D Online */
+      #splash-logo {
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 16px;
+        padding: 20px 28px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        width: auto;
+        display: inline-flex;
+        margin: 30px auto;
+        min-width: 280px;
+      }
+
+      #custom-logo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        width: 100%;
+        user-select: none;
+      }
+
+      .logo-title {
+        font-size: clamp(1.6rem, 4vw, 3rem);
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        line-height: 1;
+        color: #ffffff;
+        text-shadow:
+          0 0 10px rgba(0, 230, 255, 0.6),
+          0 0 30px rgba(0, 230, 255, 0.3),
+          0 0 60px rgba(139, 92, 246, 0.2),
+          0 2px 4px rgba(0, 0, 0, 0.5);
+        white-space: nowrap;
+        animation: logoPulse 3s ease-in-out infinite alternate;
+      }
+
+      .logo-sub {
+        font-size: clamp(1.1rem, 3vw, 2rem);
+        font-weight: 800;
+        letter-spacing: 0.45em;
+        color: #c9d1d9;
+        text-transform: uppercase;
+        margin-top: 2px;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+        animation: subFade 4s ease-in-out infinite alternate;
+      }
+
+      .logo-domain {
+        font-size: clamp(0.5rem, 1vw, 0.75rem);
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        color: rgba(255, 255, 255, 0.5);
+        margin-top: 6px;
+        font-family: 'Courier New', monospace;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      @keyframes logoPulse {
+        0% {
+          text-shadow:
+            0 0 10px rgba(0, 230, 255, 0.6),
+            0 0 30px rgba(0, 230, 255, 0.3),
+            0 0 60px rgba(139, 92, 246, 0.2),
+            0 2px 4px rgba(0, 0, 0, 0.5);
+          transform: scale(1);
         }
-        to {
-          transform: rotate(360deg);
+        50% {
+          transform: scale(1.03);
+        }
+        100% {
+          text-shadow:
+            0 0 15px rgba(0, 230, 255, 0.9),
+            0 0 50px rgba(0, 230, 255, 0.5),
+            0 0 80px rgba(139, 92, 246, 0.4),
+            0 2px 4px rgba(0, 0, 0, 0.5);
+          transform: scale(1);
         }
       }
+
+      @keyframes subFade {
+        0% {
+          opacity: 0.7;
+          letter-spacing: 0.45em;
+        }
+        100% {
+          opacity: 1;
+          letter-spacing: 0.55em;
+        }
+      }
+
     </style>
   </head>
 
   <body>
-    <!-- Loader, appears on initial page load (spinning Suroi logo) -->
-    <div id="initial-loader" class="loader"></div>
-
     <!-- Console -->
     <div id="console" class="floating-window" style="display: none">
       <div id="console-container" class="floating-window-container">
@@ -157,34 +354,22 @@
     <div id="splash-ui">
       <!-- Logo -->
       <div id="splash-logo">
-        <img
-          src="./img/logos/suroi_beta.svg"
-          alt="Suroi logo"
-          draggable="false"
-        />
+        <div id="custom-logo">
+          <span class="logo-title">Master 3D</span>
+          <span class="logo-sub">ONLINE</span>
+          <span class="logo-domain">online.master3d.net</span>
+        </div>
       </div>
 
       <!-- Hardware acceleration warning -->
       <div style="display: none;" id="splash-hw-acceleration-warning">
         <div translation="warning_hw_accel_1">Graphics acceleration has been disabled or is not supported by your browser.</div>
-        <span translation="warning_hw_accel_2">Suroi may not perform well.</span>
+        <span translation="warning_hw_accel_2">Master 3D Online may not perform well.</span>
         <a translation="warning_hw_accel_link" target="_blank" href="https://www.computerhope.com/issues/ch002154.htm">Read more</a>
       </div>
 
       <!-- Main menu -->
       <div id="splash-modals">
-        <!-- News (left pane) -->
-        <div id="splash-news" class="persistent-scrollbar">
-          <h2>
-            <a href="./news/">
-              <i class="fa-solid fa-newspaper"></i>
-              <span translation="news"></span>
-              <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-          </h2>
-          <div id="news-posts">%NEWS%</div>
-        </div>
-
         <!-- Center pane -->
         <div id="splash-center">
           <!-- Error messages from the server -->
@@ -199,10 +384,13 @@
 
           <!-- Username field, server selector, play buttons, & rules button -->
           <div id="splash-options" class="loading">
-            <!-- Loading icon (spinning Suroi logo) -->
+            <!-- Loading icon -->
             <div id="loader-container">
               <div class="loader"></div>
               <span id="loader-text" translation="msg_loading"></span>
+              <a id="loader-support-btn" href="https://master3d.net" target="_blank">
+                🚀 Support master3d.net
+              </a>
             </div>
 
             <div id="splash-options-wrapper">
@@ -235,100 +423,20 @@
               <button class="btn btn-lg btn-darken btn-primary" id="btn-play-solo">
                 <span translation="play_solo"></span>
               </button>
-              <div class="team-btns-container">
-                <button class="btn btn-lg btn-darken btn-primary" id="btn-play-duo">
-                  <span translation="play_duo"></span>
-                </button>
-                <button class="btn btn-lg btn-darken btn-primary" id="btn-play-squad">
-                  <span translation="play_squad"></span>
-                </button>
-              </div>
+
+              <a id="btn-support-main" class="btn btn-lg btn-darken btn-primary" href="https://master3d.net" target="_blank">
+                🚀 Support
+              </a>
+
               <div id="team-option-btns" class="team-btns-container">
                 <button class="btn btn-lg btn-darken btn-purple" id="btn-join-team" translation="join_team"></button>
                 <button class="btn btn-lg btn-darken btn-purple" id="btn-create-team" translation="create_team"></button>
               </div>
 
-              <!-- Mode/team switch messages -->
-              <div id="next-switch-messages">
-                <span id="next-team-size-msg" class="next-switch-msg" style="display: none">
-                  <div class="next-switch-icon"></div>
-                  <span class="next-switch-time"></span>
-                </span>
-                <span id="next-mode-msg" class="next-switch-msg" style="display: none">
-                  <div class="next-switch-icon"></div>
-                  <span class="next-switch-time"></span>
-                </span>
-              </div>
-
-              <!-- Rules & tutorial button -->
-              <button class="btn btn-lg btn-darken btn-secondary" id="btn-rules" style="display: none">
-                <div class="pulsating-circle" style="display: none"></div>
-                <span translation="rules_and_tutorial"></span>
-                <button class="btn-darken" id="rules-close-btn" style="display: none">
-                  <i class="fa-solid fa-xmark"></i>
-                </button>
-              </button>
             </div>
           </div>
 
-          <!-- Social buttons -->
-          <div id="splash-socials">
-            <div>
-              <a class="btn btn-darken btn-wiki" href="https://wiki.suroi.io" target="_blank">
-                <img src="img/socials/wiki.svg" width="32">
-                <span translation="wiki" style="color: white"></span>
-              </a>
-              <a class="btn btn-darken btn-kofi" href="https://ko-fi.com/suroi" target="_blank">
-                <img src="img/socials/kofi.svg" width="32">
-                <span translation="donate" style="color: white"></span>
-              </a>
-            </div>
-            <div>
-              <a
-                href="https://qm.qq.com/q/wWUAfWezWo"
-                rel="noopener noreferrer"
-                class="btn btn-darken btn-social btn-qq"
-                target="_blank"
-                style="display: none"
-              ></a>
-              <a
-                href="https://discord.suroi.io"
-                rel="noopener noreferrer"
-                class="btn btn-darken btn-social btn-discord"
-                target="_blank"
-              ></a>
-              <a
-                href="https://reddit.com/r/suroigame"
-                rel="noopener noreferrer"
-                class="btn btn-darken btn-social btn-reddit"
-                target="_blank"
-              ></a>
-              <a
-                href="https://bsky.app/profile/suroi.io"
-                rel="noopener noreferrer"
-                class="btn btn-darken btn-social btn-bsky"
-                target="_blank"
-              ></a>
-              <a
-                href="https://instagram.com/suroigame"
-                rel="noopener noreferrer"
-                class="btn btn-darken btn-social btn-instagram"
-                target="_blank"
-              ></a>
-              <a
-                href="https://www.youtube.com/@suroigame"
-                rel="noopener noreferrer"
-                class="btn btn-darken btn-social btn-youtube"
-                target="_blank"
-              ></a>
-              <a
-                href="https://github.com/HasangerGames/suroi"
-                rel="noopener noreferrer"
-                class="btn btn-darken btn-social btn-github"
-                target="_blank"
-              ></a>
-            </div>
-          </div>
+
         </div>
 
         <!-- Settings & skin options (right pane) -->
@@ -354,44 +462,22 @@
           </div>
         </div>
 
-        <!-- Featured Youtubr & Streamr -->
-        <div id="splash-featured-people">
-          <div class="featured-container">
-            <p class="featured-heading" translation="featured_youtubr"></p>
-            <a
-              class="featured-content"
-              id="youtube-featured-content"
-              href=""
-              target="_blank"
-            >
-              <img
-                id="featured-youtube-logo"
-                src="./img/misc/youtube-icon.svg"
-                alt="YouTube icon"
-                width="36"
-                height="25"
-              />
-              <span class="featured-name" id="youtube-featured-name"></span>
-            </a>
+
+      </div>
+
+      <div id="splash-hint-text">
+        Loadout lets you customize your look.
+      </div>
+
+      <!-- Tip of the Day overlay -->
+      <div id="tip-overlay" style="display:none">
+        <div id="tip-modal">
+          <div id="tip-header">
+            <span>💡 Tip of the Day</span>
+            <button id="tip-close">&times;</button>
           </div>
-          <div class="featured-container">
-            <p class="featured-heading" translation="featured_streamr"></p>
-            <a
-              class="featured-content"
-              id="twitch-featured-content"
-              target="_blank"
-              href=""
-            >
-              <img
-                id="featured-twitch-logo"
-                src="./img/misc/twitch-icon.svg"
-                alt="Twitch icon"
-                width="26.333"
-                height="30"
-              />
-              <span class="featured-name" id="twitch-featured-name"></span>
-            </a>
-          </div>
+          <div id="tip-content"></div>
+          <button id="tip-got-it">Got it!</button>
         </div>
       </div>
 
@@ -407,6 +493,7 @@
       <!-- Bottom left & right links -->
       <div id="splash-version">
         <a href="./changelog/" target="_blank" rel="noopener noreferrer">v%VITE_APP_VERSION%</a>
+        <span style="margin-left: 8px; color: #999;">· v2.7</span>
       </div>
       <div id="splash-partners">
         <a id="partners-link" href="#" translation="partners"></a> |
@@ -1473,7 +1560,48 @@
       </div>
     </div>
 
+    <!-- Tip of the Day logic -->
+    <script>
+    (function(){
+      if(sessionStorage.getItem('suroi_tip_shown'))return;
+      var tips=[
+        "Always keep moving; never stand still.",
+        "Dash to dodge big attacks and cross gaps.",
+        "Hold dash to chain longer movement when possible.",
+        "Use dash to reposition behind or to the side of enemies.",
+        "Use your shield to block incoming blue bullets.",
+        "Let your shield eat blue shots to charge your power weapon.",
+        "Save power attacks for tough enemies or bosses.",
+        "Use a power attack to clear corruption on your health bar.",
+        "Corruption reduces your max health until you cleanse it.",
+        "Avoid yellow/corrupted bullets whenever you can.",
+        "Eclipse = harder mode, better rewards. Activate it when you feel ready.",
+        "Use Eclipse early in an area for more Lucenite and artifacts.",
+        "Lucenite is the XP that makes you stronger. Always pick it up fast.",
+        "Prioritize permanent upgrades before small temporary buffs.",
+        "Pick artifacts that fit your playstyle. Defense if you get hit a lot.",
+        "Don't take artifacts with downsides you can't manage.",
+        "Learn enemy patterns. Many attacks are predictable once you watch them.",
+        "Focus one enemy at a time instead of spraying at everything.",
+        "Use safe moments to explore side paths for extra upgrades."
+      ];
+      var tip=tips[Math.floor(Math.random()*tips.length)];
+      var o=document.getElementById('tip-overlay');
+      var c=document.getElementById('tip-content');
+      var b1=document.getElementById('tip-close');
+      var b2=document.getElementById('tip-got-it');
+      if(!o||!c)return;
+      c.textContent=tip;o.style.display='flex';
+      function d(){o.style.display='none';sessionStorage.setItem('suroi_tip_shown','1');}
+      if(b1)b1.addEventListener('click',d);
+      if(b2)b2.addEventListener('click',d);
+      o.addEventListener('click',function(e){if(e.target===o)d();});
+    })();
+    </script>
+
     <!-- JS -->
+    <!-- JS Entry -->
     <script src="./src/index.ts" type="module"></script>
+
   </body>
 </html>

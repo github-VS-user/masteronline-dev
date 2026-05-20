@@ -1,7 +1,7 @@
 import { Layer, ZIndexes } from "@common/constants";
 import { Color } from "pixi.js";
 
-export const FORCE_MOBILE = false;
+export const FORCE_MOBILE = (typeof window !== 'undefined') && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 export const UI_DEBUG_MODE = false;
 export const DIFF_LAYER_HITBOX_OPACITY = 0.25;
 export const FOOTSTEP_HITBOX_LAYER = Layer.Ground;

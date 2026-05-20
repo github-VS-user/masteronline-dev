@@ -54,7 +54,7 @@ import { Plane } from "./objects/plane";
 import { Player } from "./objects/player";
 import { Projectile } from "./objects/projectile";
 import { SyncedParticle } from "./objects/syncedParticle";
-import { autoPickup, fetchServerData, finalizeUI, resetPlayButtons, setUpUI, teamSocket, unlockPlayButtons, updateDisconnectTime } from "./ui";
+import { autoPickup, fetchServerData, finalizeUI, resetPlayButtons, setUpUI, unlockPlayButtons, updateDisconnectTime } from "./ui";
 import { EMOTE_SLOTS, LAYER_TRANSITION_DELAY, PERK_MESSAGE_FADE_TIME, PIXI_SCALE, UI_DEBUG_MODE } from "./utils/constants";
 import { DebugRenderer } from "./utils/debugRenderer";
 import { setUpNetGraph } from "./utils/graph/netGraph";
@@ -786,13 +786,16 @@ export const Game = new (class Game {
             volume: GameConsole.getBuiltInCVar("cv_music_volume")
         });
 
+        console.log("[Game.init] Starting Promise.all for initPixi, SoundManager, finalizeUI");
         void Promise.all([
             initPixi(),
             SoundManager.init(),
             finalizeUI()
         ]).then(() => {
+            console.log("[Game.init] Promise.all resolved — unlocking play buttons");
             unlockPlayButtons();
             resetPlayButtons();
+            console.log("[Game.init] Play buttons unlocked and reset");
         });
     }
 
@@ -832,10 +835,12 @@ export const Game = new (class Game {
 
         if (this.gameStarted) return;
 
+        console.log(`[Game.connect] Creating WebSocket to: ${address.substring(0, 100)}...`);
         this._socket = new WebSocket(address);
         this._socket.binaryType = "arraybuffer";
 
         this._socket.onopen = (): void => {
+            console.log(`[Game.connect] WebSocket opened successfully: ${address.substring(0, 100)}...`);
             this.pixi.start();
             this.music?.stop();
             this.connecting = false;
@@ -936,7 +941,8 @@ export const Game = new (class Game {
 
         const ui = UIManager.ui;
 
-        this._socket.onerror = (): void => {
+        this._socket.onerror = (err: Event | string): void => {
+            console.error(`[Game.connect] WebSocket error:`, err instanceof Event ? (err.target as WebSocket)?.url || "unknown" : err);
             this.pixi.stop();
             this.error = true;
             this.connecting = false;
@@ -946,12 +952,13 @@ export const Game = new (class Game {
         };
 
         this._socket.onclose = (e: CloseEvent): void => {
+            console.warn(`[Game.connect] WebSocket closed: code=${e.code} reason="${e.reason}" wasClean=${e.wasClean}`);
             this.pixi.stop();
             this.connecting = false;
             this.socketCloseCallback?.(undefined);
             resetPlayButtons();
 
-            const reason = e.reason || "Connection lost";
+            const reason = e.reason || "Connection Lost | Restarting server — Sorry!";
 
             if (reason.startsWith("Invalid game version")) {
                 alert(reason);
@@ -1146,8 +1153,7 @@ export const Game = new (class Game {
 
                 this.gameStarted = false;
 
-                if (teamSocket) ui.createTeamMenu.fadeIn(250, resolve);
-                else resolve();
+                resolve();
             });
         });
     }

@@ -157,6 +157,7 @@ class UIManagerClass {
     }
 
     readonly ui = Object.freeze({
+        loaderContainer: $<HTMLDivElement>("#loader-container"),
         loaderText: $<HTMLDivElement>("#loader-text"),
 
         serverList: $<HTMLUListElement>("#server-list"),

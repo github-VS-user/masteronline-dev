@@ -1,26 +1,57 @@
 {
     "$schema": "config.schema.json",
-    "hostname": "127.0.0.1",
+    "hostname": "0.0.0.0",
     "port": 8000,
     "map": "normal",
-    "teamMode": "solo",
-    "spawn": { "mode": "default" },
-    "maxPlayersPerGame": 80,
-    "maxGames": 5,
+    "teamMode": {
+        "rotation": [
+            "solo"
+        ],
+        "cron": "0 0 1 1 0"
+    },
+    "spawn": {
+        "mode": "default"
+    },
+    "maxPlayersPerGame": 20,
+    "maxGames": 3,
+    "ipHeader": "X-Real-IP",
+    "maxSimultaneousConnections": 20,
+    "maxJoinAttempts": {
+        "count": 10,
+        "duration": 15000
+    },
     "roles": {
-        "developr": { "password": "developr", "isDev": true },
-        "dev_managr": { "password": "dev_managr" },
-        "designr": { "password": "designr" },
-        "vip_designr": { "password": "vip_designr" },
-        "sound_designr": { "password": "sound_designr" },
-        "moderatr": { "password": "moderatr" },
-        "administratr": { "password": "administratr" },
-        "lead_content_creatr": { "password": "lead_content_creatr", "isDev": true },
-        "content_creatr": { "password": "content_creatr" },
-        "donatr": { "password": "donatr" },
-        "marketr": { "password": "marketr", "isDev": true },
-
-        "hasanger": { "password": "hasanger", "isDev": true },
-        "pap": { "password": "pap", "isDev": true }
+        "developr": {
+            "password": "CHANGE_ME",
+            "isDev": true
+        },
+        "dev_managr": {
+            "password": "CHANGE_ME"
+        },
+        "designr": {
+            "password": "CHANGE_ME"
+        },
+        "vip_designr": {
+            "password": "CHANGE_ME"
+        },
+        "sound_designr": {
+            "password": "CHANGE_ME"
+        },
+        "moderatr": {
+            "password": "CHANGE_ME"
+        },
+        "administratr": {
+            "password": "CHANGE_ME"
+        },
+        "lead_content_creatr": {
+            "password": "CHANGE_ME",
+            "isDev": true
+        },
+        "content_creatr": {
+            "password": "CHANGE_ME"
+        },
+        "donatr": {
+            "password": "CHANGE_ME"
+        }
     }
 }

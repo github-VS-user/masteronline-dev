@@ -285,6 +285,7 @@ if (!Cluster.isPrimary) {
         routes: {
             "/play": async(req, res) => {
                 if (!game.allowJoin) {
+                    game.warn(`[/play] Rejected: game ${game.id} not allowing joins yet`);
                     return new Response("403 Forbidden");
                 }
 
@@ -293,16 +294,19 @@ if (!Cluster.isPrimary) {
 
                 if (simultaneousConnections?.isLimited(ip)) {
                     game.warn(ip, "exceeded maximum simultaneous connections");
+                    game.warn(`[/play] Rejected ${ip}: max simultaneous connections`);
                     return new Response("403 Forbidden");
                 }
                 if (joinAttempts?.isLimited(ip)) {
                     game.warn(ip, "exceeded maximum join attempts");
+                    game.warn(`[/play] Rejected ${ip}: max join attempts`);
                     return new Response("403 Forbidden");
                 }
                 joinAttempts?.increment(ip);
 
                 const punishment = await getPunishment(ip);
                 if (punishment && punishment.message !== "noname") {
+                    game.warn(`[/play] Rejected ${ip}: punishment (${punishment.message})`);
                     return new Response("403 Forbidden");
                 }
 
@@ -325,9 +329,13 @@ if (!Cluster.isPrimary) {
         websocket: {
             open(socket: Bun.ServerWebSocket<PlayerSocketData>) {
                 const data = socket.data;
+                game.log(`[WS open] Connection from ${data.ip}, teamID=${data.teamID ?? "none"}, role=${data.role ?? "none"}`);
                 data.player = game.addPlayer(socket);
-                if (data.player === undefined) return;
-
+                if (data.player === undefined) {
+                    game.warn(`[WS open] game.addPlayer returned undefined for ${data.ip} — likely rejected`);
+                    return;
+                }
+                game.log(`[WS open] Player added successfully: ${data.ip}`);
                 simultaneousConnections?.increment(data.ip);
                 // data.player.sendGameOverPacket(false); // uncomment to test game over screen
             },
@@ -342,6 +350,7 @@ if (!Cluster.isPrimary) {
 
             close(socket: Bun.ServerWebSocket<PlayerSocketData>) {
                 const { player, ip } = socket.data;
+                game.log(`[WS close] Connection closed: ip=${ip}, player=${!!player}`);
 
                 if (player) game.removePlayer(player);
                 if (ip) simultaneousConnections?.decrement(ip);
